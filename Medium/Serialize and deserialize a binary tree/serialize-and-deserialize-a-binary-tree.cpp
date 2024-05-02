@@ -90,32 +90,43 @@ struct Node
 }; */
 
 
-class Solution {
-public:
-    void inorder(Node* root, vector<int>& v) {
-        if (root == nullptr) return;
-        inorder(root->left, v);
-        v.push_back(root->data);
-        inorder(root->right, v);
+class Solution
+{
+    void inorder(Node *root, vector<int> &store){
+        if(root == NULL)
+            return;
+            
+        inorder(root->left, store);
+        store.push_back(root->data);
+        inorder(root->right, store);
     }
-    vector<int> serialize(Node *root) {
-        vector<int> v;
-        inorder(root, v);
-        return v;
+    
+    public:
+    //Function to serialize a tree and return a list containing nodes of tree.
+    vector<int> serialize(Node *root) 
+    {
+        vector<int> str;
+        inorder(root, str);
+        return str;
     }
-    Node* buildtree(vector<int>& v, vector<int>::iterator start, vector<int>::iterator end) {
-        if (start == end) return nullptr;
-        auto mid = start + (end - start) / 2;
-        Node* root = new Node(*mid);
-        root->left = buildtree(v, start, mid);
-        root->right = buildtree(v, mid + 1, end);
+    
+    //Function to deserialize a list and construct the tree.
+    Node * deSerialize(vector<int> &A)
+    {
+        int n = A.size();
+        Node *root = new Node(A[0]);
+        
+        for(int i=1; i<n; i+=2){
+            Node *newRoot = new Node(A[i]);
+            newRoot->left = root;
+            if(i+1 < n){
+                newRoot->right = new Node(A[i+1]);
+            }
+            root = newRoot;
+        }
         return root;
     }
-    Node* deSerialize(vector<int>& v) {
-        return buildtree(v, v.begin(), v.end());
-    }
 };
-
 //{ Driver Code Starts.
 
 void inorder(Node *root) {
